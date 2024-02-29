@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\APIController\NewsController;
+use App\Http\Controllers\APIController\ApiNewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/news', [NewsController::class, 'listNews']);
-Route::get('/news/article/{articleId}', [NewsController::class, 'getArticle']);
+Route::get('/news', [ApiNewsController::class, 'listNews']);
+Route::get('/news/article/{articleId}', [ApiNewsController::class, 'getArticle']);

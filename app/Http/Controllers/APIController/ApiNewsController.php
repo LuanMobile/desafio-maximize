@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 use jcobhams\NewsApi\NewsApi;
 
-class NewsController extends Controller
+class ApiNewsController extends Controller
 {
     public function listNews(): JsonResponse
     {
