@@ -21,4 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/news', [NewsController::class, 'listNews']);
-Route::get('/news/{titulo-da-materia}', [NewsController::class, 'getArticle']);
+Route::get('/news/article/{articleId}', [NewsController::class, 'getArticle']);
