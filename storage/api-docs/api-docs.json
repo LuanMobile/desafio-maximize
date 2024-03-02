@@ -5,14 +5,27 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/news?page=1": {
+        "/api/news?page={id}": {
             "get": {
                 "tags": [
                     "/news"
                 ],
                 "summary": "View a list of news",
                 "description": "returns a list of news",
-                "operationId": "80e8bbb9874ca4cbdc95203269358b6d",
+                "operationId": "a04fa10877ac5ff727b81adc4831c0d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of news",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "2"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success"

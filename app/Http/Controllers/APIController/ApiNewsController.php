@@ -11,11 +11,22 @@ class ApiNewsController extends Controller
 {
 /**
  * @OA\Get(
- *      path="/api/news?page=1",
+ *      path="/api/news?page={id}",
  *      tags={"/news"},
  *      summary="View a list of news",
  *      description="returns a list of news",
- *      security={ {"bearer": {} }}, 
+ *      security={ {"bearer": {} }},
+ *  @OA\Parameter(
+ *    description="ID of news",
+ *    in="path",
+ *    name="id",
+ *    required=false,
+ *    example="2",
+ *    @OA\Schema(
+ *       type="integer",
+ *       format="int64"
+ *    )
+ * ),
  *      @OA\Response(
  *          response=200,
  *          description="Success"
