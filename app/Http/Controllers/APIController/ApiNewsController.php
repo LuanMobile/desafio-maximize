@@ -9,10 +9,13 @@ use jcobhams\NewsApi\NewsApi;
 
 class ApiNewsController extends Controller
 {
-    public function listNews(): JsonResponse
+    public function listNews(): object
     {
-        Cache::get('req');
-
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        $cacheName = "page_" . $page;
+        $cacheNews = Cache::get($cacheName);
+        if ($cacheNews) { return $cacheNews; }
+        
         $articlesFiltered = $this->newsFiltered()->map(function ($article) {
             return [
                 'title'       =>  $article->title,
@@ -20,18 +23,33 @@ class ApiNewsController extends Controller
                 'urlToImage'  =>  $article->urlToImage,
                 'publishedAt' =>  date('d-m-Y', strtotime($article->publishedAt)),
             ];
-        })->forPage(3, 5);
+        });
 
-        Cache::put('req', $articlesFiltered, 300);
-        return response()->json($articlesFiltered);
+        $qtdItems = 5;
+        if ($page != 1) {
+            $newsPerPage = $articlesFiltered->forPage($page, $qtdItems);
+            if ($newsPerPage->isEmpty()) { 
+                return response()->json(["error" => "Page not found"], 404);
+            }
+            Cache::put($cacheName, $newsPerPage, 300);
+            return $newsPerPage;
+        }
+
+        Cache::put($cacheName, $articlesFiltered, 300);
+        return $articlesFiltered;
     }
 
-    public function getArticle(int $articleId): JsonResponse
+    public function getArticle(int $articleId): array|JsonResponse
     {
-        Cache::get('req');
+        $cacheName = "req_" . $articleId;
+        $articleCache = Cache::get($cacheName);
+        if ($articleCache) {
+            return $articleCache;
+        }
+
         $articlesFiltered = $this->newsFiltered();
         if (!isset($articlesFiltered[$articleId])) {
-            return response()->json(['error' => 'Article not found'], 404);
+            return response()->json(["error" => "Article not found"], 404);
         };
 
         $article = $articlesFiltered[$articleId];
@@ -42,11 +60,11 @@ class ApiNewsController extends Controller
                 'urlToImage'  =>  $article->urlToImage,
                 'publishedAt' =>  date('d-m-Y', strtotime($article->publishedAt)),
         ];
-        Cache::put('req', $articleCompleted, 300);
-        return response()->json($articleCompleted);
+        Cache::put($cacheName, $articleCompleted, 300);
+        return $articleCompleted;
     }
 
-    public function newsFiltered(): mixed
+    public function newsFiltered(): object
     {
         $newsapi = new NewsApi(env('API_KEY'));
         $top_headlines = (array) $newsapi->getTopHeadlines(null, null, 'us', null);
