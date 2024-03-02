@@ -9,6 +9,20 @@ use jcobhams\NewsApi\NewsApi;
 
 class ApiNewsController extends Controller
 {
+/**
+ * @OA\Get(
+ *      path="/api/news?page=1",
+ *      tags={"/news"},
+ *      summary="View a list of news",
+ *      description="returns a list of news",
+ *      security={ {"bearer": {} }}, 
+ *      @OA\Response(
+ *          response=200,
+ *          description="Success"
+ *      )
+ * )
+ */
+
     public function listNews(): object
     {
         $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -38,6 +52,31 @@ class ApiNewsController extends Controller
         Cache::put($cacheName, $articlesFiltered, 300);
         return $articlesFiltered;
     }
+
+    /**
+ * @OA\Get(
+ *      path="/api/news/article/{articleId}",
+ *      tags={"/news"},
+ *      summary="View a list of news",
+ *      operationId="getArticle",
+ *      security={ {"bearer": {} }}, 
+ * @OA\Parameter(
+ *    description="ID of article",
+ *    in="path",
+ *    name="articleId",
+ *    required=true,
+ *    example="2",
+ *    @OA\Schema(
+ *       type="integer",
+ *       format="int64"
+ *    )
+ * ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Success"
+ *      )
+ * )
+ */
 
     public function getArticle(int $articleId): array|JsonResponse
     {
