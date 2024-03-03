@@ -32,10 +32,14 @@ Com o projeto já em execução e ainda na pasta "laradock", acesse o workspace 
 docker compose exec workspace bash
 ```
 
-Após acessar o workspace, instale as dependências da aplicação
+Após acessar o workspace, instale as dependências da aplicação e gere chave da aplicação no arquivo `.env`
 
 ```bash
 composer install
+```
+
+```bash
+php artisan key:generate
 ```
 
 ### Acesse o [history.md](/HISTORY.md) para entender sobre o projeto
